@@ -48,7 +48,7 @@ export class ApiResponseInterceptor<TData>
 
   private isExcludedEndpoint(requestUrl: string): boolean {
     const toExclude = this.configService.get<string[]>('EXCLUDED_ENDPOINTS');
-    return toExclude.some((ep) => requestUrl.includes(ep));
+    return toExclude.some((endpoint) => requestUrl.includes(endpoint));
   }
 
   private logResponse(request: Request, statusCode: number): void {
