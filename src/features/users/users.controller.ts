@@ -1,5 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
+
 import { HttpService } from '@core/http';
+
 import { UserViewModel } from './user.vm';
 
 @Controller({ path: 'users', version: '1.0' })

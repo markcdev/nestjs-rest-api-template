@@ -1,5 +1,5 @@
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { Provider } from '@nestjs/common';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
 import { HttpExceptionFilter } from '@core/exceptions';
 import { ApiResponseInterceptor } from '@core/response-mapping';

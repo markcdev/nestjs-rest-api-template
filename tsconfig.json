@@ -18,10 +18,19 @@
     "noFallthroughCasesInSwitch": false,
     "moduleResolution": "node",
     "baseUrl": "src",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "paths": {
       "@core/*": ["core/*"],
       "@features/*": ["features/*"],
       "@utils/*": ["utils/*"]
+    }
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "@core/(.*)": "<rootDir>/src/core/$1",
+      "@features/(.*)": "<rootDir>/src/features/$1",
+      "@utils/(.*)": "<rootDir>/src/utils/$1"
     }
   }
 }

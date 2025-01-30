@@ -1,9 +1,8 @@
-import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 import { configModuleOptions } from '@core/config';
 import { LoggingModule } from '@core/logging';
-
 import { OrdersModule } from '@features/orders';
 import { UsersModule } from '@features/users';
 
