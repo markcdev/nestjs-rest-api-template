@@ -16,17 +16,18 @@ export class LocalDevelopmentGuard implements CanActivate {
   canActivate(context: ExecutionContext): Observable<boolean> {
     const requestedUrl = this.getRequestedUrl(context);
 
-    const isLocalDevelopment =
-      this.configService.get<string>('NODE_ENV', { infer: true }) ===
-      'development';
-
-    if (!isLocalDevelopment) {
+    if (!this.isLocalDevelopment()) {
       throw new ForbiddenException(
         `Access to ${requestedUrl} is only allowed in development mode`,
       );
     }
 
     return of(true);
+  }
+
+  private isLocalDevelopment(): boolean {
+    const envConfigValue = this.configService.get<string>('NODE_ENV');
+    return envConfigValue.toLowerCase() === 'development';
   }
 
   private getRequestedUrl(context: ExecutionContext): string {

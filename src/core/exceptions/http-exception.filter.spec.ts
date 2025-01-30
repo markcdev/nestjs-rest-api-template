@@ -26,7 +26,10 @@ describe('HttpExceptionFilter', () => {
     const module = await Test.createTestingModule({
       providers: [
         HttpExceptionFilter,
-        { provide: LoggingService, useValue: mockLoggingService },
+        {
+          provide: LoggingService,
+          useValue: mockLoggingService,
+        },
       ],
     }).compile();
 
