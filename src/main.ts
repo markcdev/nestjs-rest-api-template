@@ -3,6 +3,8 @@ import { NestFactory } from '@nestjs/core';
 
 import { LoggingService } from '@core/logging';
 
+import helmet from 'helmet';
+
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -16,6 +18,7 @@ async function bootstrap() {
   const loggingService = app.get<LoggingService>(LoggingService);
   const appLogger = loggingService.getChildLogger('main.ts');
 
+  app.use(helmet());
   await app.listen(servicePort);
 
   appLogger.info(`running on port:${servicePort}`);
