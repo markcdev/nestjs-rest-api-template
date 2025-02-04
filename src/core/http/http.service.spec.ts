@@ -1,7 +1,8 @@
 import { HttpService as AxiosHttpService } from '@nestjs/axios';
+import { HttpException, InternalServerErrorException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 
-import { AxiosHeaders, AxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosHeaders, AxiosRequestConfig } from 'axios';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 
 import { HttpService } from './http.service';
@@ -25,7 +26,10 @@ describe('HttpService', () => {
     const module = await Test.createTestingModule({
       providers: [
         HttpService,
-        { provide: AxiosHttpService, useValue: mockedAxiosHttpService },
+        {
+          provide: AxiosHttpService,
+          useValue: mockedAxiosHttpService,
+        },
       ],
     }).compile();
 
@@ -168,5 +172,31 @@ describe('HttpService', () => {
         headers: sut.getDefaultHeaders,
       }),
     );
+  });
+
+  it('should handle axios errors', async () => {
+    const error: Partial<AxiosError> = {
+      isAxiosError: true,
+      message: 'An axios error',
+      status: 400,
+    };
+
+    mockedAxiosHttpService.axiosRef.request = jest
+      .fn()
+      .mockRejectedValueOnce(error);
+
+    await expect(sut.execute<TestResponse>()).rejects.toThrow(
+      new HttpException(error.message, error.status),
+    );
+  });
+
+  it('should handle unknown errors', async () => {
+    const error = new InternalServerErrorException();
+
+    mockedAxiosHttpService.axiosRef.request = jest
+      .fn()
+      .mockRejectedValueOnce(error);
+
+    await expect(sut.execute<TestResponse>()).rejects.toThrow(error);
   });
 });

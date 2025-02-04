@@ -1,11 +1,17 @@
 import { HttpService as AxiosHttpService } from '@nestjs/axios';
-import { Injectable, Scope } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+  Scope,
+} from '@nestjs/common';
 
 import {
   AxiosHeaders,
   AxiosHeaderValue,
   AxiosRequestConfig,
   AxiosResponse,
+  isAxiosError,
   Method,
 } from 'axios';
 
@@ -24,7 +30,7 @@ export class HttpService {
     return this.defaultHeaders;
   }
 
-  constructor(private axiosHttpService: AxiosHttpService) {}
+  constructor(private axios: AxiosHttpService) {}
 
   withAuthTokenHeader(token: string): HttpService {
     this.requestConfig.headers['Authorization'] = `Bearer ${token}`;
@@ -58,11 +64,20 @@ export class HttpService {
 
   async execute<TResponse>(): Promise<AxiosResponse<TResponse>> {
     const completeRequest = this.requestConfig;
+    this.requestConfig = { headers: this.getDefaultHeaders };
 
-    this.requestConfig = {
-      headers: this.getDefaultHeaders,
-    };
+    try {
+      return await this.axios.axiosRef.request<TResponse>(completeRequest);
+    } catch (exception: unknown) {
+      this.handleException(exception);
+    }
+  }
 
-    return this.axiosHttpService.axiosRef.request<TResponse>(completeRequest);
+  private handleException(e: unknown) {
+    if (isAxiosError(e)) {
+      throw new HttpException(e.message, e.status);
+    }
+
+    throw new InternalServerErrorException();
   }
 }
