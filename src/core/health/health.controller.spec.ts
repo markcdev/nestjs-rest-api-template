@@ -9,14 +9,14 @@ import { HealthController } from './health.controller';
 
 describe('HealthController', () => {
   let mockHealthCheckService: DeepMockProxy<HealthCheckService>;
-  let mockPrismaHealthIndcator: DeepMockProxy<PrismaHealthIndicator>;
+  let mockPrismaHealthIndicator: DeepMockProxy<PrismaHealthIndicator>;
   let mockPrismaService: DeepMockProxy<PrismaService>;
 
   let sut: HealthController;
 
   beforeEach(async () => {
     mockHealthCheckService = mockDeep<HealthCheckService>();
-    mockPrismaHealthIndcator = mockDeep<PrismaHealthIndicator>();
+    mockPrismaHealthIndicator = mockDeep<PrismaHealthIndicator>();
     mockPrismaService = mockDeep<PrismaService>();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -28,7 +28,7 @@ describe('HealthController', () => {
         },
         {
           provide: PrismaHealthIndicator,
-          useValue: mockPrismaHealthIndcator,
+          useValue: mockPrismaHealthIndicator,
         },
         {
           provide: PrismaService,
